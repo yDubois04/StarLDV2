@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="1"
+        android:rowCount="5"
+        android:stretchColumns="0,1,2,3">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/textViewDate"
+                android:padding="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Choisissez une date"/>
+
+            <TextView
+                android:id="@+id/textViewHour"
+                android:padding="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Choisissez une heure"/>
+        </TableRow>
+
+        <TableRow>
+
+            <Spinner
+                android:id="@+id/busSpinner"
+                android:spinnerMode="dropdown"
+                android:dropDownWidth="200px"/>
+
+            <Spinner
+                android:id="@+id/sensSpinner"
+                android:spinnerMode="dropdown"/>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/buttonValidate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/button_validate" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>
