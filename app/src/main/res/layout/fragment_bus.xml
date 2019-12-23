@@ -47,20 +47,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1">
-
             <Button
                 android:id="@+id/buttonValidate"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/button_validate" />
         </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-        </TableRow>
-
     </TableLayout>
 
 </LinearLayout>

@@ -11,6 +11,12 @@
         android:id="@+id/fragmentBus"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        class="fr.istic.mob.starldv2.fragment.BusFragment"/>
+        android:name="fr.istic.mob.starldv2.fragment.BusFragment"/>
+
+    <fragment
+        android:id="@+id/fragmentStop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="fr.istic.mob.starldv2.fragment.StopFragment"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
