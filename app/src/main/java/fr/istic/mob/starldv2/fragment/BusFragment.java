@@ -19,7 +19,6 @@ import android.widget.TimePicker;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import fr.istic.mob.starldv2.R;
 import fr.istic.mob.starldv2.SpinnerAdapter;
@@ -34,6 +33,11 @@ public class BusFragment extends Fragment {
     private Spinner spinnerSens;
     private BusFragmentListener fragmentListener;
     private Button validateButton;
+    private int idBus;
+
+    public interface BusFragmentListener {
+        void validateOnClicked (int id);
+    }
 
     @Override
     public void onCreate (Bundle savedInstanceState){
@@ -72,7 +76,7 @@ public class BusFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (fragmentListener != null) {
-                    fragmentListener.validateOnClicked();
+                    fragmentListener.validateOnClicked(idBus);
                 }
             }
         });
@@ -91,14 +95,6 @@ public class BusFragment extends Fragment {
         });
 
         return view;
-    }
-
-    public static BusFragment newInstance () {
-        return new BusFragment();
-    }
-
-    public interface BusFragmentListener {
-        void validateOnClicked ();
     }
 
     @Override
@@ -122,11 +118,13 @@ public class BusFragment extends Fragment {
         final ArrayList<BusRoute> buses = convertCursorToArrayList(cursor);
         SpinnerAdapter adapter = new SpinnerAdapter(buses, getContext());
         spinnerBus.setAdapter(adapter);
+        idBus = buses.get(0).getId();
 
         spinnerBus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 ArrayList<String> sens = getSensBus(buses, buses.get(i).getShortName());
+                idBus = buses.get(i).getId();
                 ArrayAdapter<String> listSensAdapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, sens);
                 spinnerSens.setAdapter(listSensAdapter);
             }

@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import fr.istic.mob.starldv2.fragment.BusFragment;
 import fr.istic.mob.starldv2.fragment.StopFragment;
 import fr.istic.mob.starldv2.model.BusRoute;
+import fr.istic.mob.starldv2.model.Stop;
 
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -27,14 +28,15 @@ import javax.sql.DataSource;
 public class MainActivity extends AppCompatActivity implements BusFragment.BusFragmentListener {
 
     private FragmentManager fragmentManager;
+    private FragmentTransaction fragmentTransaction;
     private BusFragment busFragment;
     private StopFragment stopFragment;
-    private FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         //Initializes fragments
         fragmentManager = this.getSupportFragmentManager();
@@ -43,18 +45,18 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
 
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.hide(stopFragment);
-        fragmentTransaction.show(busFragment);
         fragmentTransaction.commit();
-
-
     }
 
     @Override
-    public void validateOnClicked() {
-        System.out.println("dans le listener");
+    public void validateOnClicked(int id) {
+        ;
+        stopFragment.createList (id);
+
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.hide(busFragment);
         fragmentTransaction.show(stopFragment);
+        fragmentTransaction.hide(busFragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 }
