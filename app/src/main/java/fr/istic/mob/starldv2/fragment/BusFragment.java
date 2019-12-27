@@ -34,9 +34,10 @@ public class BusFragment extends Fragment {
     private BusFragmentListener fragmentListener;
     private Button validateButton;
     private int idBus;
+    private int sens;
 
     public interface BusFragmentListener {
-        void validateOnClicked (int id);
+        void validateOnClicked (int id, int sens);
     }
 
     @Override
@@ -76,7 +77,7 @@ public class BusFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (fragmentListener != null) {
-                    fragmentListener.validateOnClicked(idBus);
+                    fragmentListener.validateOnClicked(idBus, sens);
                 }
             }
         });
@@ -119,6 +120,7 @@ public class BusFragment extends Fragment {
         SpinnerAdapter adapter = new SpinnerAdapter(buses, getContext());
         spinnerBus.setAdapter(adapter);
         idBus = buses.get(0).getId();
+        sens = 0;
 
         spinnerBus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -131,6 +133,18 @@ public class BusFragment extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
+        spinnerSens.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                sens = i;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
     }

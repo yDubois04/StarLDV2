@@ -49,9 +49,9 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
     }
 
     @Override
-    public void validateOnClicked(int id) {
+    public void validateOnClicked(int id, int sens) {
         ;
-        stopFragment.createList (id);
+        stopFragment.createList (id, sens);
 
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.show(stopFragment);

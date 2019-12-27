@@ -25,13 +25,17 @@ public class StopFragment extends Fragment {
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_stop, container, false);
 
-        list = (ListView) view.findViewById(R.id.stopList);
         return view;
     }
 
-    public void createList (int id) {
+    public void createList (int id, int sens) {
 
-        Cursor cursor = getContext().getContentResolver().query(Uri.parse("content://fr.istic.starproviderLD/stop"), null, Integer.toString(id), null, null);
+        list = this.getView().findViewById(R.id.stopList);
+
+        Cursor cursor = getContext().getContentResolver().query(Uri.parse("content://fr.istic.starproviderLD/stop"), null, Integer.toString(id), null, Integer.toString(sens));
+        System.out.println("count" + cursor.getCount());
+        System.out.println("id "+id);
+
         ArrayList<String> listStop = convertCursorToArrayList(cursor);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, listStop);
         list.setAdapter(adapter);
