@@ -22,7 +22,6 @@ import java.util.GregorianCalendar;
 import androidx.fragment.app.Fragment;
 import fr.istic.mob.starldv2.R;
 import fr.istic.mob.starldv2.SpinnerAdapter;
-import fr.istic.mob.starldv2.model.BusRoute;
 
 public class BusFragment extends Fragment {
 
@@ -33,11 +32,12 @@ public class BusFragment extends Fragment {
     private Spinner spinnerSens;
     private BusFragmentListener fragmentListener;
     private Button validateButton;
-    private int idBus;
+    private long idBus;
     private int sens;
+    private SpinnerAdapter adapter;
 
     public interface BusFragmentListener {
-        void validateOnClicked (int id, int sens);
+        void validateOnClicked (long id, int sens);
     }
 
     @Override
@@ -113,20 +113,19 @@ public class BusFragment extends Fragment {
     }
 
 
-    private void initializeSpinners(){
+    private void initializeSpinners() {
 
-        Cursor cursor = getContext().getContentResolver().query(Uri.parse("content://fr.istic.starproviderLD/busroute"),null,null,null,null);
-        final ArrayList<BusRoute> buses = convertCursorToArrayList(cursor);
-        SpinnerAdapter adapter = new SpinnerAdapter(buses, getContext());
+        Cursor cursor = getContext().getContentResolver().query(Uri.parse("content://fr.istic.starproviderLD/busroute"), null, null, null, null);
+        adapter = new SpinnerAdapter(getContext(),cursor);
         spinnerBus.setAdapter(adapter);
-        idBus = buses.get(0).getId();
-        sens = 0;
+        idBus = adapter.getItemId(0);
+        sens = 1;
 
         spinnerBus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                ArrayList<String> sens = getSensBus(buses, buses.get(i).getShortName());
-                idBus = buses.get(i).getId();
+                ArrayList<String> sens = getSensBus(i);
+                idBus = adapter.getItemId(i);
                 ArrayAdapter<String> listSensAdapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, sens);
                 spinnerSens.setAdapter(listSensAdapter);
             }
@@ -139,7 +138,11 @@ public class BusFragment extends Fragment {
         spinnerSens.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                sens = i;
+                if (i == 1) {
+                    sens = 0;
+                } else {
+                    sens = 1;
+                }
             }
 
             @Override
@@ -148,30 +151,14 @@ public class BusFragment extends Fragment {
             }
         });
     }
-    private ArrayList<BusRoute> convertCursorToArrayList (Cursor cursor) {
-        ArrayList<BusRoute> ret = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            BusRoute bus = new BusRoute(cursor.getInt(0), cursor.getString(1), cursor.getString(2),
-                    cursor.getString(3), cursor.getInt(4), cursor.getString(5), cursor.getString(6));
-            ret.add(bus);
-            cursor.moveToNext();
-        }
-        cursor.close();
-        return ret;
-    }
 
-    private ArrayList<String> getSensBus (ArrayList<BusRoute> buses, String shortName) {
+    private ArrayList<String> getSensBus (int i) {
         ArrayList<String> ret = new ArrayList<>();
 
-        for (BusRoute bus : buses) {
-            if (shortName.equals(bus.getShortName())) {
-                String longName = bus.getLongName();
-                String [] columns = longName.split("<>");
-                ret.add(columns[0]);
-                ret.add(columns[columns.length-1]);
-            }
-        }
+        String longName = adapter.getItem(i).getLongName();
+        String [] columns = longName.split("<>");
+        ret.add(columns[0]);
+        ret.add(columns[columns.length-1]);
         return ret;
     }
 }

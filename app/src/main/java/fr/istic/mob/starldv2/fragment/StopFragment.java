@@ -10,11 +10,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import java.util.ArrayList;
 import androidx.fragment.app.Fragment;
+import fr.istic.mob.starldv2.StopAdapter;
 import fr.istic.mob.starldv2.R;
 
 public class StopFragment extends Fragment {
 
     private ListView list;
+    private StopAdapter adapter;
 
     @Override
     public void onCreate (Bundle savedInstanceState){
@@ -24,33 +26,21 @@ public class StopFragment extends Fragment {
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_stop, container, false);
+        list = view.findViewById(R.id.stopList);
 
         return view;
     }
 
-    public void createList (int id, int sens) {
+    public void createList (long id, int sens) {
+        Cursor cursor = getContext().getContentResolver().query(Uri.parse("content://fr.istic.starproviderLD/stop"), null, Long.toString(id), null, Integer.toString(sens));
 
-        list = this.getView().findViewById(R.id.stopList);
-
-        Cursor cursor = getContext().getContentResolver().query(Uri.parse("content://fr.istic.starproviderLD/stop"), null, Integer.toString(id), null, Integer.toString(sens));
-        System.out.println("count" + cursor.getCount());
-        System.out.println("id "+id);
-
-        ArrayList<String> listStop = convertCursorToArrayList(cursor);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, listStop);
+        StopAdapter adapter = new StopAdapter(getContext(),cursor);
         list.setAdapter(adapter);
     }
 
-    private ArrayList<String> convertCursorToArrayList (Cursor cursor) {
-        ArrayList<String> ret = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            String stop = cursor.getString(0);
-            System.out.println(stop);
-            ret.add(stop);
-            cursor.moveToNext();
-        }
-        cursor.close();
-        return ret;
-    }
+   /* @Override
+    public void onSaveInstanceState (Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList("stops",stops);
+    }*/
 }

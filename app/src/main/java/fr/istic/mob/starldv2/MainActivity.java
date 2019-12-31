@@ -1,29 +1,20 @@
 package fr.istic.mob.starldv2;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import fr.istic.mob.starldv2.fragment.BusFragment;
 import fr.istic.mob.starldv2.fragment.StopFragment;
-import fr.istic.mob.starldv2.model.BusRoute;
-import fr.istic.mob.starldv2.model.Stop;
-
-import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
-
+import android.widget.ListView;
+import android.widget.SearchView;
 import java.util.ArrayList;
 
-import javax.sql.DataSource;
 
 public class MainActivity extends AppCompatActivity implements BusFragment.BusFragmentListener {
 
@@ -49,8 +40,8 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
     }
 
     @Override
-    public void validateOnClicked(int id, int sens) {
-        ;
+    public void validateOnClicked(long id, int sens) {
+
         stopFragment.createList (id, sens);
 
         fragmentTransaction = fragmentManager.beginTransaction();
@@ -58,5 +49,56 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
         fragmentTransaction.hide(busFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                setContentView(R.layout.search_view);
+
+                ListView list = findViewById(R.id.search_list);
+
+                Cursor c = getContentResolver().query(Uri.parse("content://fr.istic.starproviderLD/search"),null,query.trim(),null,null);
+                ArrayList<String> results = convertCursorToArrayList(c);
+                ArrayAdapter <String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item,results);
+                list.setAdapter(adapter);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                setContentView(R.layout.activity_main);
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+    private ArrayList<String> convertCursorToArrayList (Cursor cursor) {
+        ArrayList<String> ret = new ArrayList<>();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            ret.add(cursor.getString(0));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return ret;
     }
 }

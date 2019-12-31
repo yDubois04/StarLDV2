@@ -5,11 +5,11 @@ public class Stop {
     private int id;
     private String name;
     private String description;
-    private String latitude;
-    private String longitude;
+    private double latitude;
+    private double longitude;
     private int wheelchairBoarding;
 
-    public Stop (int id, String name, String description, String latitude,String longitude, int wheelchairBoarding) {
+    public Stop (int id, String name, String description, double latitude, double longitude, int wheelchairBoarding) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -30,11 +30,11 @@ public class Stop {
         return description;
     }
 
-    public String getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public String getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
