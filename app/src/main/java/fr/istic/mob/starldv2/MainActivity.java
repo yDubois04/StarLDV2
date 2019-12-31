@@ -1,11 +1,14 @@
 package fr.istic.mob.starldv2;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import fr.istic.mob.starldv2.adapter.SearchAdapter;
 import fr.istic.mob.starldv2.fragment.BusFragment;
 import fr.istic.mob.starldv2.fragment.StopFragment;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,34 +23,28 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
 
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
-    private BusFragment busFragment;
-    private StopFragment stopFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        fragmentManager= this.getSupportFragmentManager();
 
-        //Initializes fragments
-        fragmentManager = this.getSupportFragmentManager();
-        busFragment = (BusFragment)fragmentManager.findFragmentById(R.id.fragmentBus);
-        stopFragment = (StopFragment) fragmentManager.findFragmentById(R.id.fragmentStop);
-
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.hide(stopFragment);
-        fragmentTransaction.commit();
+        BusFragment busFragment = BusFragment.newInstance();
+        replaceFragment(busFragment);
     }
 
     @Override
     public void validateOnClicked(long id, int sens) {
+        StopFragment stopFragment = StopFragment.newInstance(id, sens);
+        replaceFragment(stopFragment);
+    }
 
-        stopFragment.createList (id, sens);
-
+    private void replaceFragment (Fragment fragment) {
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.show(stopFragment);
-        fragmentTransaction.hide(busFragment);
         fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.replace(R.id.frame, fragment);
         fragmentTransaction.commit();
     }
 
@@ -67,8 +64,7 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
                 ListView list = findViewById(R.id.search_list);
 
                 Cursor c = getContentResolver().query(Uri.parse("content://fr.istic.starproviderLD/search"),null,query.trim(),null,null);
-                ArrayList<String> results = convertCursorToArrayList(c);
-                ArrayAdapter <String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item,results);
+                SearchAdapter adapter = new SearchAdapter(getApplicationContext(), c);
                 list.setAdapter(adapter);
 
                 return false;

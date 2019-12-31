@@ -1,4 +1,4 @@
-package fr.istic.mob.starldv2;
+package fr.istic.mob.starldv2.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
+
+import fr.istic.mob.starldv2.R;
 import fr.istic.mob.starldv2.model.BusRoute;
 
 public class SpinnerAdapter extends CursorAdapter {

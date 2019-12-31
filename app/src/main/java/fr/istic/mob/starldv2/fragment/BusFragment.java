@@ -21,7 +21,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import androidx.fragment.app.Fragment;
 import fr.istic.mob.starldv2.R;
-import fr.istic.mob.starldv2.SpinnerAdapter;
+import fr.istic.mob.starldv2.adapter.SpinnerAdapter;
 
 public class BusFragment extends Fragment {
 
@@ -38,6 +38,10 @@ public class BusFragment extends Fragment {
 
     public interface BusFragmentListener {
         void validateOnClicked (long id, int sens);
+    }
+
+    public static BusFragment newInstance () {
+        return new BusFragment();
     }
 
     @Override
