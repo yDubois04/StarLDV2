@@ -2,6 +2,7 @@ package fr.istic.mob.starldv2.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,15 +19,26 @@ public class SearchAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        return LayoutInflater.from(context).inflate(R.layout.support_simple_spinner_dropdown_item, viewGroup,false);
+        return LayoutInflater.from(context).inflate(R.layout.item_search, viewGroup,false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView tvStop = (TextView) view;
+        TextView tvStop = view.findViewById(R.id.textViewStop);
+        TextView tvBus = view.findViewById(R.id.textViewBus);
 
         String stopName = cursor.getString(cursor.getColumnIndexOrThrow("stop_name"));
         String busName = cursor.getString(1);
-        tvStop.setText(stopName +"  "+ busName);
+        int color = Color.parseColor("#"+cursor.getString(5));
+        int colorTxt = Color.parseColor("#"+cursor.getString(6));
+
+        tvStop.setBackgroundColor(color);
+        tvBus.setBackgroundColor(color);
+
+        tvStop.setText(stopName);
+        tvBus.setText(busName);
+
+        tvBus.setTextColor(colorTxt);
+        tvStop.setTextColor(colorTxt);
     }
 }

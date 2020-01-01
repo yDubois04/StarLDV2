@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">StarLDV2</string>
     <string name="button_validate">Validate</string>
+    <string name="toast_validate_date">The date and the hour must be superior than the actual date and hour</string>
+    <string name="toast_validate_not_null">One or two fields are empty</string>
 </resources>

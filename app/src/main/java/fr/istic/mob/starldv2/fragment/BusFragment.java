@@ -16,6 +16,8 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -25,8 +27,8 @@ import fr.istic.mob.starldv2.adapter.SpinnerAdapter;
 
 public class BusFragment extends Fragment {
 
-    private TextView chooseHour;
-    private TextView chooseDate;
+    private TextView tvHour;
+    private TextView tvDate;
     private Calendar calendar;
     private Spinner spinnerBus;
     private Spinner spinnerSens;
@@ -35,6 +37,7 @@ public class BusFragment extends Fragment {
     private long idBus;
     private int sens;
     private SpinnerAdapter adapter;
+    private Calendar chooseDate;
 
     public interface BusFragmentListener {
         void validateOnClicked (long id, int sens);
@@ -50,52 +53,73 @@ public class BusFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView (LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bus, container,false);
 
-        chooseHour = view.findViewById(R.id.textViewHour);
-        chooseDate = view.findViewById(R.id.textViewDate);
+        tvHour = view.findViewById(R.id.textViewHour);
+        tvDate = view.findViewById(R.id.textViewDate);
         validateButton = view.findViewById(R.id.buttonValidate);
-        calendar = GregorianCalendar.getInstance();
+        calendar = Calendar.getInstance();
 
         //Initializes spinners
         spinnerBus = view.findViewById(R.id.busSpinner);
         spinnerSens = view.findViewById(R.id.sensSpinner);
+        chooseDate = Calendar.getInstance();
 
         this.initializeSpinners();
 
         //Initializes Text View
-        chooseHour.setOnClickListener(new View.OnClickListener() {
+        tvHour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minutes) {
-                        chooseHour.setText(hour + " : "+minutes);
+                        tvHour.setText(hour + " : "+minutes);
+                        chooseDate.set(Calendar.HOUR,hour);
+                        chooseDate.set(Calendar.MINUTE, minutes);
                     }
                 }, calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE), true);
                 timePickerDialog.show();
             }
         });
-        validateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (fragmentListener != null) {
-                    fragmentListener.validateOnClicked(idBus, sens);
-                }
-            }
-        });
 
-        chooseDate.setOnClickListener(new View.OnClickListener() {
+       tvDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(DatePicker datePicker, int annee, int mois, int jour) {
-                        chooseDate.setText(jour + " " + mois+ " "+annee);
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        chooseDate.set(Calendar.YEAR, year);
+                        chooseDate.set(Calendar.MONTH, month);
+                        chooseDate.set(Calendar.DAY_OF_MONTH, day);
+
+                        month = month+1;
+                        tvDate.setText(day + "/" + month + "/"+year);
                     }
                 },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.show();
+            }
+        });
+
+
+        validateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (fragmentListener != null) {
+                    if (!tvDate.getText().equals("")&& !tvHour.getText().equals("")) {
+                        System.out.println(chooseDate.get(Calendar.MONTH));
+                        if (chooseDate.after(calendar)) {
+                            fragmentListener.validateOnClicked(idBus, sens);
+                        }
+                        else {
+                            Toast.makeText(getContext(),getString(R.string.toast_validate_date),Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else {
+                       Toast.makeText(getContext(), getString(R.string.toast_validate_not_null), Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 
