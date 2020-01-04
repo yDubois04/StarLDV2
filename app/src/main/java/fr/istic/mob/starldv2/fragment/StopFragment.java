@@ -37,11 +37,15 @@ public class StopFragment extends Fragment {
 
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_stop, container, false);
+        return inflater.inflate(R.layout.fragment_stop, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         list = view.findViewById(R.id.stopList);
 
         cursor = getContext().getContentResolver().
-                    query(Uri.parse("content://fr.istic.starproviderLD/stop"), null, Long.toString(id), null, Long.toString(sens));
+                query(Uri.parse("content://fr.istic.starproviderLD/stop"), null, Long.toString(id), null, Long.toString(sens));
 
         final StopAdapter adapter = new StopAdapter(getContext(),cursor);
         list.setAdapter(adapter);
@@ -52,17 +56,9 @@ public class StopFragment extends Fragment {
                 Toast.makeText(getContext()," "+ adapter.getItem(i).getName(), Toast.LENGTH_SHORT).show();
             }
         });
-        return view;
     }
 
     public static StopFragment newInstance (long id, long sens) {
         return new StopFragment(id, sens);
-    }
-
-    @Override
-    public void onSaveInstanceState (Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putLong("id", id);
-        outState.putLong("sens", sens);
     }
 }

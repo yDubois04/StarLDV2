@@ -1,58 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:stretchColumns="1">
 
-    <TableLayout
-        android:layout_width="wrap_content"
+    <TableRow
+        android:layout_marginTop="10dp">
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_column="0"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:text="@string/date_tv" />
+
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_column="1"
+            android:hint="@string/date_choose"/>
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:id="@+id/tvHeure"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_column="0"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:text="@string/tv_hour" />
+
+        <TextView
+            android:id="@+id/textViewHour"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_column="1"
+            android:hint="@string/hour_choose"/>
+
+    </TableRow>
+
+    <TableRow>
+        <TextView
+            android:id="@+id/tvBus"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_column="0"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:text="@string/tv_bus" />
+
+        <Spinner
+            android:id="@+id/busSpinner"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_column="1"/>
+    </TableRow>
+
+
+    <TableRow>
+        <TextView
+            android:id="@+id/tvSens"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_marginLeft="10dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:text="@string/tv_sens"/>
+
+        <Spinner
+            android:id="@+id/sensSpinner"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_column="1" />
+    </TableRow>
+
+
+    <TableRow
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:columnCount="1"
-        android:rowCount="5"
-        android:stretchColumns="0,1,2,3">
+        android:layout_weight="1">
+        <Button
+            android:id="@+id/buttonValidate"
+            android:text="@string/button_validate" />
+    </TableRow>
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/textViewDate"
-                android:padding="4dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Choisissez une date"/>
-
-            <TextView
-                android:id="@+id/textViewHour"
-                android:padding="4dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Choisissez une heure"/>
-        </TableRow>
-
-        <TableRow>
-
-            <Spinner
-                android:id="@+id/busSpinner"
-                android:spinnerMode="dropdown"
-                android:dropDownWidth="200px"/>
-
-            <Spinner
-                android:id="@+id/sensSpinner"
-                android:spinnerMode="dropdown"/>
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-            <Button
-                android:id="@+id/buttonValidate"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/button_validate" />
-        </TableRow>
-    </TableLayout>
-
-</LinearLayout>
+</TableLayout>

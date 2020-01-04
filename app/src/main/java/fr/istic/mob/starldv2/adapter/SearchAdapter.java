@@ -19,16 +19,18 @@ public class SearchAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        return LayoutInflater.from(context).inflate(R.layout.item_search, viewGroup,false);
+        return LayoutInflater.from(context).inflate(R.layout.item_list, viewGroup,false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView tvStop = view.findViewById(R.id.textViewStop);
-        TextView tvBus = view.findViewById(R.id.textViewBus);
+
+        TextView tvBus = view.findViewById(R.id.textView1);
+        TextView tvStop = view.findViewById(R.id.textView2);
 
         String stopName = cursor.getString(cursor.getColumnIndexOrThrow("stop_name"));
         String busName = cursor.getString(1);
+
         int color = Color.parseColor("#"+cursor.getString(5));
         int colorTxt = Color.parseColor("#"+cursor.getString(6));
 

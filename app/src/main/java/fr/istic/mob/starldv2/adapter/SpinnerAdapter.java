@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CursorAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import fr.istic.mob.starldv2.R;

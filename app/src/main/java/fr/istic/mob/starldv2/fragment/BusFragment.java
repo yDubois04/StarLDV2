@@ -54,8 +54,11 @@ public class BusFragment extends Fragment {
 
     @Override
     public View onCreateView (LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_bus, container,false);
+        return inflater.inflate(R.layout.fragment_bus, container,false);
+    }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         tvHour = view.findViewById(R.id.textViewHour);
         tvDate = view.findViewById(R.id.textViewDate);
         validateButton = view.findViewById(R.id.buttonValidate);
@@ -84,7 +87,7 @@ public class BusFragment extends Fragment {
             }
         });
 
-       tvDate.setOnClickListener(new View.OnClickListener() {
+        tvDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
@@ -93,7 +96,6 @@ public class BusFragment extends Fragment {
                         chooseDate.set(Calendar.YEAR, year);
                         chooseDate.set(Calendar.MONTH, month);
                         chooseDate.set(Calendar.DAY_OF_MONTH, day);
-
                         month = month+1;
                         tvDate.setText(day + "/" + month + "/"+year);
                     }
@@ -117,13 +119,11 @@ public class BusFragment extends Fragment {
                         }
                     }
                     else {
-                       Toast.makeText(getContext(), getString(R.string.toast_validate_not_null), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.toast_validate_not_null), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
-
-        return view;
     }
 
     @Override
@@ -184,9 +184,17 @@ public class BusFragment extends Fragment {
         ArrayList<String> ret = new ArrayList<>();
 
         String longName = adapter.getItem(i).getLongName();
-        String [] columns = longName.split("<>");
-        ret.add(columns[0]);
-        ret.add(columns[columns.length-1]);
+        if (longName.contains("->")) {
+            String [] columns = longName.split("->");
+            ret.add(columns[0]);
+            ret.add(columns[columns.length-1]);
+        }
+        else {
+            String [] columns = longName.split("<>");
+            ret.add(columns[0]);
+            ret.add(columns[columns.length-1]);
+        }
+
         return ret;
     }
 }

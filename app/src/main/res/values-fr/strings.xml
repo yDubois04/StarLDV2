@@ -4,4 +4,10 @@
     <string name="button_validate">Valider</string>
     <string name="toast_validate_date">La date et l\'heure choisie doivent supérieure à celles actuelles</string>
     <string name="toast_validate_not_null">Un ou deux champs sont vides</string>
+    <string name="date_tv">Date :</string>
+    <string name="date_choose">Cliquer pour choisir une date</string>
+    <string name="tv_hour">Heure :</string>
+    <string name="hour_choose">Cliquer pour choisir une heure</string>
+    <string name="tv_bus">Bus :</string>
+    <string name="tv_sens">Sens :</string>
 </resources>

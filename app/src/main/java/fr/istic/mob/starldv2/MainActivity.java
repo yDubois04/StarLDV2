@@ -13,8 +13,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.SimpleCursorAdapter;
 
 public class MainActivity extends AppCompatActivity implements BusFragment.BusFragmentListener {
 
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
     private FragmentTransaction fragmentTransaction;
     private boolean search;
     private SearchView searchView;
+    private Fragment actualFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
         search = false;
 
         fragmentManager= this.getSupportFragmentManager();
-
         BusFragment busFragment = BusFragment.newInstance();
         replaceFragment(busFragment);
     }
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
         fragmentTransaction.replace(R.id.frame, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+        actualFragment = fragment;
     }
 
 
@@ -85,10 +88,18 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
     public void onBackPressed() {
         if (search) {
             searchView.onActionViewCollapsed();
+            search = false;
             setContentView(R.layout.activity_main);
-            BusFragment fragment = BusFragment.newInstance();
-            replaceFragment(fragment);
+            if (actualFragment instanceof BusFragment) {
+                BusFragment busFragment = BusFragment.newInstance();
+                replaceFragment(busFragment);
+            }
+            else {
+                fragmentManager.popBackStack();
+            }
         }
-        super.onBackPressed();
+        else {
+            super.onBackPressed();
+        }
     }
 }
