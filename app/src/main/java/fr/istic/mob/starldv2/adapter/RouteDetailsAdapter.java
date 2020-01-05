@@ -25,16 +25,16 @@ public class RouteDetailsAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        TextView tvStop = view.findViewById(R.id.textView1);
-        TextView tvBus = view.findViewById(R.id.textView2);
+        TextView tv2 = view.findViewById(R.id.textView2);
+        TextView tv1 = view.findViewById(R.id.textView1);
 
-        String stopName = cursor.getString(0);
-        String schedule = cursor.getString(1);
+        String stopName = cursor.getString(1);
+        String schedule = cursor.getString(2);
 
-        tvStop.setBackgroundColor(Color.BLACK);
-        tvBus.setBackgroundColor(Color.BLACK);
+        tv2.setTextColor(Color.RED);
+        tv1.setTextColor(Color.BLACK);
 
-        tvStop.setText(stopName);
-        tvBus.setText(schedule);
+        tv2.setText(stopName);
+        tv1.setText(schedule);
     }
 }

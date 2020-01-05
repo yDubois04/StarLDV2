@@ -1,5 +1,6 @@
 package fr.istic.mob.starldv2.fragment;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import androidx.fragment.app.Fragment;
 import fr.istic.mob.starldv2.adapter.StopAdapter;
 import fr.istic.mob.starldv2.R;
@@ -20,6 +20,11 @@ public class StopFragment extends Fragment {
     private long id;
     private long sens;
     private Cursor cursor;
+    private StopFragmentListener stopFragmentListener;
+
+    public interface StopFragmentListener {
+        void validateOnClicked (long idStop);
+    }
 
     public StopFragment () {
 
@@ -53,12 +58,26 @@ public class StopFragment extends Fragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getContext()," "+ adapter.getItem(i).getName(), Toast.LENGTH_SHORT).show();
+                stopFragmentListener.validateOnClicked(adapter.getItemId(i));
             }
         });
     }
 
     public static StopFragment newInstance (long id, long sens) {
         return new StopFragment(id, sens);
+    }
+
+    @Override
+    public void onAttach (Context context) {
+        super.onAttach(context);
+        if (getActivity() instanceof StopFragment.StopFragmentListener) {
+            stopFragmentListener = (StopFragment.StopFragmentListener) getActivity();
+        }
+    }
+
+    @Override
+    public void onDetach () {
+        super.onDetach();
+        stopFragmentListener = null;
     }
 }

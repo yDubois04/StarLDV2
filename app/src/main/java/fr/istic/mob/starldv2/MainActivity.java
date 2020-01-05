@@ -1,30 +1,35 @@
 package fr.istic.mob.starldv2;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import fr.istic.mob.starldv2.adapter.RouteDetailsAdapter;
 import fr.istic.mob.starldv2.adapter.SearchAdapter;
 import fr.istic.mob.starldv2.fragment.BusFragment;
+import fr.istic.mob.starldv2.fragment.RouteDetailsFragment;
 import fr.istic.mob.starldv2.fragment.StopFragment;
+import fr.istic.mob.starldv2.fragment.StopTimesFragment;
+
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.SimpleCursorAdapter;
+import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity implements BusFragment.BusFragmentListener {
+public class MainActivity extends AppCompatActivity implements BusFragment.BusFragmentListener, StopFragment.StopFragmentListener, StopTimesFragment.StopTimesFragmentListener {
 
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
     private boolean search;
     private SearchView searchView;
     private Fragment actualFragment;
+    private long busRouteId;
+    private int sens;
+    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +42,6 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
         replaceFragment(busFragment);
     }
 
-    @Override
-    public void validateOnClicked(long id, int sens) {
-        StopFragment stopFragment = StopFragment.newInstance(id, sens);
-        replaceFragment(stopFragment);
-    }
 
     private void replaceFragment (Fragment fragment) {
         fragmentTransaction = fragmentManager.beginTransaction();
@@ -101,5 +101,26 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
         else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void validateOnClicked(long id, int sens, Calendar chooseDate) {
+        this.busRouteId = id;
+        this.sens = sens;
+        this.calendar = chooseDate;
+        StopFragment stopFragment = StopFragment.newInstance(id,sens);
+        replaceFragment(stopFragment);
+    }
+
+    @Override
+    public void validateOnClicked(long idStop) {
+        StopTimesFragment stopTimesFragment = StopTimesFragment.newInstance(idStop, this.busRouteId, this.sens);
+        replaceFragment(stopTimesFragment);
+    }
+
+    @Override
+    public void validateOnClicked(int id, String schedule) {
+        RouteDetailsFragment routeDetailsFragment = RouteDetailsFragment.newInstance(schedule,id);
+        replaceFragment(routeDetailsFragment);
     }
 }

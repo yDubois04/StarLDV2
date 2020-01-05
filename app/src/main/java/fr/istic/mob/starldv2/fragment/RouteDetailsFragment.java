@@ -6,14 +6,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import androidx.fragment.app.Fragment;
 import fr.istic.mob.starldv2.R;
 import fr.istic.mob.starldv2.adapter.RouteDetailsAdapter;
-import fr.istic.mob.starldv2.adapter.StopAdapter;
 
 public class RouteDetailsFragment extends Fragment {
 
@@ -50,6 +46,8 @@ public class RouteDetailsFragment extends Fragment {
 
         Cursor cursor = getContext().getContentResolver().
                 query(Uri.parse("content://fr.istic.starproviderLD/routedetail"), null, Integer.toString(idTrip),null,schedule);
+
+        System.out.println("count" + cursor.getCount()+ idTrip+ schedule);
 
         final RouteDetailsAdapter adapter = new RouteDetailsAdapter(getContext(),cursor);
         list.setAdapter(adapter);

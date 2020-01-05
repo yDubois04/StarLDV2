@@ -40,7 +40,7 @@ public class BusFragment extends Fragment {
     private Calendar chooseDate;
 
     public interface BusFragmentListener {
-        void validateOnClicked (long id, int sens);
+        void validateOnClicked (long id, int sens, Calendar chooseDate);
     }
 
     public static BusFragment newInstance () {
@@ -110,9 +110,8 @@ public class BusFragment extends Fragment {
             public void onClick(View view) {
                 if (fragmentListener != null) {
                     if (!tvDate.getText().equals("")&& !tvHour.getText().equals("")) {
-                        System.out.println(chooseDate.get(Calendar.MONTH));
                         if (chooseDate.after(calendar)) {
-                            fragmentListener.validateOnClicked(idBus, sens);
+                            fragmentListener.validateOnClicked(idBus, sens,chooseDate);
                         }
                         else {
                             Toast.makeText(getContext(),getString(R.string.toast_validate_date),Toast.LENGTH_SHORT).show();
