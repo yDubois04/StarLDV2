@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import java.util.Calendar;
@@ -26,29 +27,77 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
     private FragmentTransaction fragmentTransaction;
     private boolean search;
     private SearchView searchView;
-    private Fragment actualFragment;
     private long busRouteId;
     private int sens;
     private Calendar calendar;
+    private BusFragment busFragment;
+    private StopFragment stopFragment;
+    private StopTimesFragment stopTimesFragment;
+    private RouteDetailsFragment routeDetailsFragment;
+    private boolean isTablet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         search = false;
+        isTablet = getResources().getBoolean(R.bool.isTablet);
+        System.out.println("isTablet "+isTablet);
 
         fragmentManager= this.getSupportFragmentManager();
-        BusFragment busFragment = BusFragment.newInstance();
-        replaceFragment(busFragment);
+        busFragment = BusFragment.newInstance();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.frame, busFragment);
+        fragmentTransaction.commit();
+    }
+
+
+    @Override
+    public void validateOnClicked(long id, int sens, Calendar chooseDate) {
+        this.busRouteId = id;
+        this.sens = sens;
+        this.calendar = chooseDate;
+        stopFragment = StopFragment.newInstance(id,sens);
+        replaceFragment(stopFragment);
+    }
+
+    @Override
+    public void validateOnClicked(long idStop) {
+        stopTimesFragment = StopTimesFragment.newInstance(idStop, this.busRouteId, this.sens);
+        replaceFragment(stopTimesFragment);
+    }
+
+    @Override
+    public void validateOnClicked(int id, String schedule) {
+        routeDetailsFragment = RouteDetailsFragment.newInstance(schedule,id);
+        replaceFragment(routeDetailsFragment);
     }
 
 
     private void replaceFragment (Fragment fragment) {
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frame, fragment);
+
+        if (! isTablet) {
+            fragmentTransaction.replace(R.id.frame, fragment);
+        }
+        else {
+            if (fragment instanceof StopFragment) {
+                fragmentTransaction.replace(R.id.frame2, fragment);
+            }
+            else if (fragment instanceof StopTimesFragment) {
+                fragmentTransaction.replace(R.id.frame,fragment);
+                fragmentTransaction.hide(stopFragment);
+            }
+            else if (fragment instanceof RouteDetailsFragment) {
+                fragmentTransaction.replace(R.id.frame2,fragment);
+                fragmentTransaction.show(fragment);
+            }
+            else if (fragment instanceof BusFragment) {
+                fragmentTransaction.replace(R.id.frame,fragment);
+            }
+        }
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-        actualFragment = fragment;
     }
 
 
@@ -90,37 +139,16 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
             searchView.onActionViewCollapsed();
             search = false;
             setContentView(R.layout.activity_main);
-            if (actualFragment instanceof BusFragment) {
-                BusFragment busFragment = BusFragment.newInstance();
-                replaceFragment(busFragment);
+            if (fragmentManager.getBackStackEntryCount() > 0) {
+                fragmentManager.popBackStack();
             }
             else {
-                fragmentManager.popBackStack();
+                BusFragment busFragment = BusFragment.newInstance();
+                replaceFragment(busFragment);
             }
         }
         else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public void validateOnClicked(long id, int sens, Calendar chooseDate) {
-        this.busRouteId = id;
-        this.sens = sens;
-        this.calendar = chooseDate;
-        StopFragment stopFragment = StopFragment.newInstance(id,sens);
-        replaceFragment(stopFragment);
-    }
-
-    @Override
-    public void validateOnClicked(long idStop) {
-        StopTimesFragment stopTimesFragment = StopTimesFragment.newInstance(idStop, this.busRouteId, this.sens);
-        replaceFragment(stopTimesFragment);
-    }
-
-    @Override
-    public void validateOnClicked(int id, String schedule) {
-        RouteDetailsFragment routeDetailsFragment = RouteDetailsFragment.newInstance(schedule,id);
-        replaceFragment(routeDetailsFragment);
     }
 }

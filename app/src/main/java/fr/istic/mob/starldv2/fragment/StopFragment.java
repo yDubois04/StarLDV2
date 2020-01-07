@@ -17,8 +17,6 @@ import fr.istic.mob.starldv2.R;
 public class StopFragment extends Fragment {
 
     private ListView list;
-    private long id;
-    private long sens;
     private Cursor cursor;
     private StopFragmentListener stopFragmentListener;
 
@@ -28,11 +26,6 @@ public class StopFragment extends Fragment {
 
     public StopFragment () {
 
-    }
-
-    public StopFragment (long id, long sens) {
-        this.id = id;
-        this.sens = sens;
     }
 
     @Override
@@ -48,6 +41,8 @@ public class StopFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         list = view.findViewById(R.id.stopList);
+        long id = getArguments().getLong("id");
+        long sens = getArguments().getLong("sens");
 
         cursor = getContext().getContentResolver().
                 query(Uri.parse("content://fr.istic.starproviderLD/stop"), null, Long.toString(id), null, Long.toString(sens));
@@ -64,7 +59,12 @@ public class StopFragment extends Fragment {
     }
 
     public static StopFragment newInstance (long id, long sens) {
-        return new StopFragment(id, sens);
+        StopFragment stopFragment = new StopFragment();
+        Bundle args = new Bundle();
+        args.putLong("id", id);
+        args.putLong("sens",sens);
+        stopFragment.setArguments(args);
+        return stopFragment;
     }
 
     @Override

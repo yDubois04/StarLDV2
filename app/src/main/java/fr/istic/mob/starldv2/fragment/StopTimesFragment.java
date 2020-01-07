@@ -22,25 +22,26 @@ import fr.istic.mob.starldv2.model.StopTime;
 public class StopTimesFragment extends Fragment {
 
     ListView list;
-    long idStopTimes;
-    long idBusRoute;
-    long sensTrip;
-    Calendar calendar;
     StopTimesFragmentListener fragmentListener;
 
     public interface StopTimesFragmentListener {
         void validateOnClicked (int id, String schedule);
     }
 
-    public StopTimesFragment (long idStopTimes, long idBusRoute, long sensTrip) {
-        this.idStopTimes = idStopTimes;
-        this.idBusRoute = idBusRoute;
-        this.sensTrip = sensTrip;
-    }
-
     public StopTimesFragment () {
 
     }
+
+    public static StopTimesFragment newInstance (long idStopTimes, long idBusRoute, long sensTrip) {
+        StopTimesFragment fragment = new StopTimesFragment();
+        Bundle args =  new Bundle();
+        args.putLong("idStopTimes",idStopTimes);
+        args.putLong("idBusRoute",idBusRoute);
+        args.putLong("sensTrip",sensTrip);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @Override
     public void onCreate (Bundle savedInstanceState){
@@ -55,6 +56,9 @@ public class StopTimesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         list = view.findViewById(R.id.stopTimesList);
+        Long idStopTimes = getArguments().getLong("idStopTimes");
+        Long idBusRoute = getArguments().getLong("idBusRoute");
+        Long sensTrip = getArguments().getLong("sensTrip");
 
         String [] args = {Long.toString(idStopTimes),Long.toString(idBusRoute),Long.toString(sensTrip)};
 
@@ -71,10 +75,6 @@ public class StopTimesFragment extends Fragment {
                 fragmentListener.validateOnClicked(stopTime.getTrip_id(), stopTime.getArrivalTime());
             }
         });
-    }
-
-    public static StopTimesFragment newInstance (long idStopTimes, long idBusRoute, long sensTrip) {
-        return new StopTimesFragment(idStopTimes, idBusRoute, sensTrip);
     }
 
     @Override
