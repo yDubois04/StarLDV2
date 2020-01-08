@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.SearchView;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements BusFragment.BusFragmentListener, StopFragment.StopFragmentListener, StopTimesFragment.StopTimesFragmentListener {
 
@@ -114,7 +115,26 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
 
     @Override
     public void validateOnClicked(long idStop) {
-        StopTimesFragment stopTimesFragment = StopTimesFragment.newInstance(idStop, this.busRouteId, this.sens);
+        String day = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH);
+
+        int intH = calendar.get(Calendar.HOUR);
+        String h;
+        if(intH < 10){
+            h = "0" + Integer.toString(intH);
+        }else{
+            h = Integer.toString(intH);
+        }
+
+        int intM = calendar.get(Calendar.MINUTE);
+        String m;
+        if(intM < 10){
+            m = "0" + Integer.toString(intM);
+        }else{
+            m = Integer.toString(intM);
+        }
+
+        String hour = h+":"+m+":00";
+        StopTimesFragment stopTimesFragment = StopTimesFragment.newInstance(idStop, this.busRouteId, this.sens, day, hour);
         replaceFragment(stopTimesFragment);
     }
 

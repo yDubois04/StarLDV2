@@ -25,6 +25,8 @@ public class StopTimesFragment extends Fragment {
     long idStopTimes;
     long idBusRoute;
     long sensTrip;
+    String day;
+    String hour;
     Calendar calendar;
     StopTimesFragmentListener fragmentListener;
 
@@ -32,10 +34,12 @@ public class StopTimesFragment extends Fragment {
         void validateOnClicked (int id, String schedule);
     }
 
-    public StopTimesFragment (long idStopTimes, long idBusRoute, long sensTrip) {
+    public StopTimesFragment (long idStopTimes, long idBusRoute, long sensTrip, String day, String hour) {
         this.idStopTimes = idStopTimes;
         this.idBusRoute = idBusRoute;
         this.sensTrip = sensTrip;
+        this.day = day;
+        this.hour = hour;
     }
 
     public StopTimesFragment () {
@@ -56,7 +60,7 @@ public class StopTimesFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         list = view.findViewById(R.id.stopTimesList);
 
-        String [] args = {Long.toString(idStopTimes),Long.toString(idBusRoute),Long.toString(sensTrip)};
+        String [] args = {Long.toString(idStopTimes),Long.toString(idBusRoute),Long.toString(sensTrip), day, hour};
 
         Cursor cursor = getContext().getContentResolver().
                 query(Uri.parse("content://fr.istic.starproviderLD/stoptime"), null,null, args, null);
@@ -73,8 +77,8 @@ public class StopTimesFragment extends Fragment {
         });
     }
 
-    public static StopTimesFragment newInstance (long idStopTimes, long idBusRoute, long sensTrip) {
-        return new StopTimesFragment(idStopTimes, idBusRoute, sensTrip);
+    public static StopTimesFragment newInstance (long idStopTimes, long idBusRoute, long sensTrip, String day, String hour) {
+        return new StopTimesFragment(idStopTimes, idBusRoute, sensTrip, day, hour);
     }
 
     @Override
