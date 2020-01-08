@@ -22,24 +22,10 @@ import fr.istic.mob.starldv2.model.StopTime;
 public class StopTimesFragment extends Fragment {
 
     ListView list;
-    long idStopTimes;
-    long idBusRoute;
-    long sensTrip;
-    String day;
-    String hour;
-    Calendar calendar;
     StopTimesFragmentListener fragmentListener;
 
     public interface StopTimesFragmentListener {
         void validateOnClicked (int id, String schedule);
-    }
-
-    public StopTimesFragment (long idStopTimes, long idBusRoute, long sensTrip, String day, String hour) {
-        this.idStopTimes = idStopTimes;
-        this.idBusRoute = idBusRoute;
-        this.sensTrip = sensTrip;
-        this.day = day;
-        this.hour = hour;
     }
 
     public StopTimesFragment () {
@@ -60,7 +46,7 @@ public class StopTimesFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         list = view.findViewById(R.id.stopTimesList);
 
-        String [] args = {Long.toString(idStopTimes),Long.toString(idBusRoute),Long.toString(sensTrip), day, hour};
+        String [] args = {Long.toString(getArguments().getLong("id")),Long.toString(getArguments().getLong("idBus")),Long.toString(getArguments().getLong("sens")), getArguments().getString("day"), getArguments().getString("hour")};
 
         Cursor cursor = getContext().getContentResolver().
                 query(Uri.parse("content://fr.istic.starproviderLD/stoptime"), null,null, args, null);
@@ -78,7 +64,15 @@ public class StopTimesFragment extends Fragment {
     }
 
     public static StopTimesFragment newInstance (long idStopTimes, long idBusRoute, long sensTrip, String day, String hour) {
-        return new StopTimesFragment(idStopTimes, idBusRoute, sensTrip, day, hour);
+        StopTimesFragment stopTimesFragment = new StopTimesFragment();
+        Bundle bundle = new Bundle();
+        bundle.putLong("id", idStopTimes);
+        bundle.putLong("idBus", idBusRoute);
+        bundle.putLong("sens", sensTrip);
+        bundle.putString("day", day);
+        bundle.putString("hour", hour);
+        stopTimesFragment.setArguments(bundle);
+        return stopTimesFragment;
     }
 
     @Override

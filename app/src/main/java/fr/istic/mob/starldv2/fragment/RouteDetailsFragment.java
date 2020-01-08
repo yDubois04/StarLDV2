@@ -13,21 +13,19 @@ import fr.istic.mob.starldv2.adapter.RouteDetailsAdapter;
 
 public class RouteDetailsFragment extends Fragment {
 
-    private String schedule;
-    private int idTrip;
     private ListView list;
 
     public RouteDetailsFragment () {
 
     }
 
-    public RouteDetailsFragment (String schedule, int idTrip) {
-        this.idTrip = idTrip;
-        this.schedule = schedule;
-    }
-
     public static RouteDetailsFragment newInstance (String schedule, int idTrip) {
-        return new RouteDetailsFragment(schedule,idTrip);
+        RouteDetailsFragment fragment = new RouteDetailsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("schedule",schedule);
+        bundle.putInt("idTrip",idTrip);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -43,11 +41,11 @@ public class RouteDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         list = view.findViewById(R.id.stopList);
+        int idTrip = getArguments().getInt("idTrip");
+        String schedule = getArguments().getString("schedule");
 
         Cursor cursor = getContext().getContentResolver().
                 query(Uri.parse("content://fr.istic.starproviderLD/routedetail"), null, Integer.toString(idTrip),null,schedule);
-
-        System.out.println("count" + cursor.getCount()+ idTrip+ schedule);
 
         final RouteDetailsAdapter adapter = new RouteDetailsAdapter(getContext(),cursor);
         list.setAdapter(adapter);
