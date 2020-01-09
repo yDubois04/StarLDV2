@@ -78,8 +78,8 @@ public class BusFragment extends Fragment {
                 final TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minutes) {
-                        tvHour.setText(hour + " : "+minutes);
-                        chooseDate.set(Calendar.HOUR,hour);
+                        tvHour.setText(getStringForInt(hour) + " : "+getStringForInt(minutes));
+                        chooseDate.set(Calendar.HOUR_OF_DAY,hour);
                         chooseDate.set(Calendar.MINUTE, minutes);
                     }
                 }, calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE), true);
@@ -97,7 +97,7 @@ public class BusFragment extends Fragment {
                         chooseDate.set(Calendar.MONTH, month);
                         chooseDate.set(Calendar.DAY_OF_MONTH, day);
                         month = month+1;
-                        tvDate.setText(day + "/" + month + "/"+year);
+                        tvDate.setText(getStringForInt(day)+ "/" + getStringForInt(month) + "/"+getStringForInt(year));
                     }
                 },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.show();
@@ -171,12 +171,24 @@ public class BusFragment extends Fragment {
                     sens = 1;
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
+    }
+
+    private String getStringForInt (int i) {
+        String ret;
+
+        if (i < 10) {
+            ret = "0"+i;
+        }
+        else {
+            ret = Integer.toString(i);
+        }
+
+        return ret;
     }
 
     private ArrayList<String> getSensBus (int i) {

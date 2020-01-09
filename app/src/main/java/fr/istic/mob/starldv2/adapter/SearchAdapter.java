@@ -3,14 +3,11 @@ package fr.istic.mob.starldv2.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
-
-import androidx.core.content.PermissionChecker;
 import fr.istic.mob.starldv2.R;
 
 public class SearchAdapter extends CursorAdapter {
@@ -30,16 +27,6 @@ public class SearchAdapter extends CursorAdapter {
         cursor.moveToFirst();
         cursor.move(i);
         return  cursor.getInt(0);
-    }
-
-    public int getIdStop (int i) {
-        cursor.moveToFirst();
-        cursor.move(i);
-        String stopName = cursor.getString(cursor.getColumnIndexOrThrow("stop_name"));
-        Cursor c = context.getContentResolver().query(Uri.parse("content://fr.istic.starproviderLD/stopId"),null,stopName,null,null);
-        c.moveToFirst();
-
-        return c.getInt(0);
     }
 
     @Override

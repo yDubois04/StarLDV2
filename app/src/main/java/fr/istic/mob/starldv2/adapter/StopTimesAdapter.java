@@ -52,7 +52,14 @@ public class StopTimesAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         TextView tvSchedule = (TextView) view;
-        String schedule = cursor.getString(cursor.getColumnIndexOrThrow("arrival_time"));
+        String arrivalTime = cursor.getString(cursor.getColumnIndexOrThrow("arrival_time"));
+        int hourOfArrival = Integer.parseInt(arrivalTime.substring(0,2));
+        if(hourOfArrival > 23) {
+            hourOfArrival = hourOfArrival % 24;
+        }
+
+        arrivalTime = Integer.toString(hourOfArrival) + arrivalTime.substring(2);
+        String schedule = arrivalTime;
         tvSchedule.setText(schedule);
     }
 }

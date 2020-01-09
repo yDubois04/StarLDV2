@@ -111,34 +111,6 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
                 final Cursor c = getContentResolver().query(Uri.parse("content://fr.istic.starproviderLD/search"),null,query.trim(),null,null);
                 final SearchAdapter adapter = new SearchAdapter(getApplicationContext(), c);
                 list.setAdapter(adapter);
-
-             /*   list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        String day;
-                        String hour;
-                        int sens;
-
-                        if (calendar != null) {
-                            day =  calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH);
-                            hour = getHours(calendar);
-                            sens = sensBus;
-                        }
-                        else {
-                            Calendar calendar = Calendar.getInstance();
-                            day =  calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH);
-                            hour = getHours(calendar);
-                            sens = 0;
-                        }
-                        long busRouteId = adapter.getItemId(i);
-                        int idStop = getIdStop(c,i);
-
-                        setContentView(R.layout.activity_main);
-                        stopTimesFragment = StopTimesFragment.newInstance(idStop, busRouteId, sens, day, hour);
-                        replaceFragment(stopTimesFragment);
-                    }
-                });*/
-
                 return false;
             }
 
@@ -182,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
     }
 
     private String getHours (Calendar calendar) {
-        int intH = calendar.get(Calendar.HOUR);
+        int intH = calendar.get(Calendar.HOUR_OF_DAY);
         String h;
         if(intH < 10){
             h = "0" + intH;
