@@ -4,18 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import fr.istic.mob.starldv2.adapter.RouteDetailsAdapter;
 import fr.istic.mob.starldv2.adapter.SearchAdapter;
 import fr.istic.mob.starldv2.fragment.BusFragment;
 import fr.istic.mob.starldv2.fragment.RouteDetailsFragment;
 import fr.istic.mob.starldv2.fragment.StopFragment;
 import fr.istic.mob.starldv2.fragment.StopTimesFragment;
-
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -28,9 +28,8 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
     private FragmentTransaction fragmentTransaction;
     private boolean search;
     private SearchView searchView;
-    private Fragment actualFragment;
     private long busRouteId;
-    private int sens;
+    private int sensBus;
     private Calendar calendar;
     private BusFragment busFragment;
     private StopFragment stopFragment;
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
         setContentView(R.layout.activity_main);
         search = false;
         isTablet = getResources().getBoolean(R.bool.isTablet);
-        System.out.println("isTablet "+isTablet);
+        //isTablet = true;
 
         fragmentManager= this.getSupportFragmentManager();
         busFragment = BusFragment.newInstance();
@@ -57,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
     @Override
     public void validateOnClicked(long id, int sens, Calendar chooseDate) {
         this.busRouteId = id;
-        this.sens = sens;
+        this.sensBus = sens;
         this.calendar = chooseDate;
         stopFragment = StopFragment.newInstance(id,sens);
         replaceFragment(stopFragment);
@@ -72,29 +71,24 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
 
     private void replaceFragment (Fragment fragment) {
         fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.anim_left_entrer,R.anim.anim_exit_left,R.anim.right_enter,R.anim.right_exit);
 
-        if (! isTablet) {
+        if (!isTablet) {
             fragmentTransaction.replace(R.id.frame, fragment);
-        }
-        else {
+        } else {
             if (fragment instanceof StopFragment) {
                 fragmentTransaction.replace(R.id.frame2, fragment);
-            }
-            else if (fragment instanceof StopTimesFragment) {
-                fragmentTransaction.replace(R.id.frame,fragment);
-                fragmentTransaction.hide(stopFragment);
-            }
-            else if (fragment instanceof RouteDetailsFragment) {
-                fragmentTransaction.replace(R.id.frame2,fragment);
-                fragmentTransaction.show(fragment);
+            } else if (fragment instanceof StopTimesFragment) {
+                fragmentTransaction.replace(R.id.frame, fragment);
+            } else if (fragment instanceof RouteDetailsFragment) {
+                fragmentTransaction.replace(R.id.frame2, fragment);
             }
             else if (fragment instanceof BusFragment) {
-                fragmentTransaction.replace(R.id.frame,fragment);
+                fragmentTransaction.replace(R.id.frame, fragment);
             }
         }
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-        actualFragment = fragment;
     }
 
 
@@ -112,12 +106,38 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
                 search = true;
 
                 setContentView(R.layout.search_view);
-
                 ListView list = findViewById(R.id.search_list);
 
-                Cursor c = getContentResolver().query(Uri.parse("content://fr.istic.starproviderLD/search"),null,query.trim(),null,null);
-                SearchAdapter adapter = new SearchAdapter(getApplicationContext(), c);
+                final Cursor c = getContentResolver().query(Uri.parse("content://fr.istic.starproviderLD/search"),null,query.trim(),null,null);
+                final SearchAdapter adapter = new SearchAdapter(getApplicationContext(), c);
                 list.setAdapter(adapter);
+
+             /*   list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        String day;
+                        String hour;
+                        int sens;
+
+                        if (calendar != null) {
+                            day =  calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH);
+                            hour = getHours(calendar);
+                            sens = sensBus;
+                        }
+                        else {
+                            Calendar calendar = Calendar.getInstance();
+                            day =  calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH);
+                            hour = getHours(calendar);
+                            sens = 0;
+                        }
+                        long busRouteId = adapter.getItemId(i);
+                        int idStop = getIdStop(c,i);
+
+                        setContentView(R.layout.activity_main);
+                        stopTimesFragment = StopTimesFragment.newInstance(idStop, busRouteId, sens, day, hour);
+                        replaceFragment(stopTimesFragment);
+                    }
+                });*/
 
                 return false;
             }
@@ -127,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
                 return false;
             }
         });
+
         return true;
     }
 
@@ -140,8 +161,10 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
                 fragmentManager.popBackStack();
             }
             else {
-                BusFragment busFragment = BusFragment.newInstance();
-                replaceFragment(busFragment);
+               BusFragment busFragment = BusFragment.newInstance();
+               fragmentTransaction = fragmentManager.beginTransaction();
+               fragmentTransaction.add(R.id.frame,busFragment);
+               fragmentTransaction.commit();
             }
         }
         else {
@@ -152,11 +175,17 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
     @Override
     public void validateOnClicked(long idStop) {
         String day = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH);
+        String hour = getHours(calendar);
 
+        stopTimesFragment = StopTimesFragment.newInstance(idStop, this.busRouteId, this.sensBus, day, hour);
+        replaceFragment(stopTimesFragment);
+    }
+
+    private String getHours (Calendar calendar) {
         int intH = calendar.get(Calendar.HOUR);
         String h;
         if(intH < 10){
-            h = "0" + Integer.toString(intH);
+            h = "0" + intH;
         }else{
             h = Integer.toString(intH);
         }
@@ -164,13 +193,12 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
         int intM = calendar.get(Calendar.MINUTE);
         String m;
         if(intM < 10){
-            m = "0" + Integer.toString(intM);
+            m = "0" + intM;
         }else{
             m = Integer.toString(intM);
         }
 
         String hour = h+":"+m+":00";
-        StopTimesFragment stopTimesFragment = StopTimesFragment.newInstance(idStop, this.busRouteId, this.sens, day, hour);
-        replaceFragment(stopTimesFragment);
+        return hour;
     }
 }
