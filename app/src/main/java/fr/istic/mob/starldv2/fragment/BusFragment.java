@@ -79,7 +79,7 @@ public class BusFragment extends Fragment {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int minutes) {
                         tvHour.setText(hour + " : "+minutes);
-                        chooseDate.set(Calendar.HOUR,hour);
+                        chooseDate.set(Calendar.HOUR_OF_DAY,hour);
                         chooseDate.set(Calendar.MINUTE, minutes);
                     }
                 }, calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE), true);

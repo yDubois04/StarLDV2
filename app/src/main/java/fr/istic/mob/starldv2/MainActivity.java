@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
     public void validateOnClicked(long idStop) {
         String day = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH);
 
-        int intH = calendar.get(Calendar.HOUR);
+        int intH = calendar.get(Calendar.HOUR_OF_DAY);
         String h;
         if(intH < 10){
             h = "0" + Integer.toString(intH);
