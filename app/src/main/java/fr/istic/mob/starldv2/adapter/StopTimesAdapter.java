@@ -7,9 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
-
 import fr.istic.mob.starldv2.R;
-import fr.istic.mob.starldv2.model.Stop;
 import fr.istic.mob.starldv2.model.StopTime;
 
 public class StopTimesAdapter extends CursorAdapter {
@@ -58,7 +56,7 @@ public class StopTimesAdapter extends CursorAdapter {
             hourOfArrival = hourOfArrival % 24;
         }
 
-        arrivalTime = Integer.toString(hourOfArrival) + arrivalTime.substring(2);
+        arrivalTime = hourOfArrival + arrivalTime.substring(2);
         String schedule = arrivalTime;
         tvSchedule.setText(schedule);
     }

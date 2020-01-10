@@ -14,9 +14,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import java.util.Calendar;
@@ -43,8 +40,8 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
         setContentView(R.layout.activity_main);
         search = false;
         isTablet = getResources().getBoolean(R.bool.isTablet);
-        //isTablet = true;
 
+        //Add the first fragment
         fragmentManager= this.getSupportFragmentManager();
         busFragment = BusFragment.newInstance();
         fragmentTransaction = fragmentManager.beginTransaction();
@@ -71,15 +68,15 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
 
     private void replaceFragment (Fragment fragment) {
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.anim_left_entrer,R.anim.anim_exit_left,R.anim.right_enter,R.anim.right_exit);
 
         if (!isTablet) {
+            fragmentTransaction.setCustomAnimations(R.anim.anim_left_entrer,R.anim.anim_exit_left,R.anim.right_enter,R.anim.right_exit);
             fragmentTransaction.replace(R.id.frame, fragment);
         } else {
             if (fragment instanceof StopFragment) {
                 fragmentTransaction.replace(R.id.frame2, fragment);
             } else if (fragment instanceof StopTimesFragment) {
-                fragmentTransaction.replace(R.id.frame, fragment);
+                fragmentTransaction.replace(R.id.frame2, fragment);
             } else if (fragment instanceof RouteDetailsFragment) {
                 fragmentTransaction.replace(R.id.frame2, fragment);
             }

@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import fr.istic.mob.starldv2.R;
 
-
 public class RouteDetailsAdapter extends CursorAdapter {
 
     public RouteDetailsAdapter (Context context, Cursor cursor) {

@@ -17,10 +17,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import androidx.fragment.app.Fragment;
 import fr.istic.mob.starldv2.R;
 import fr.istic.mob.starldv2.adapter.SpinnerAdapter;
@@ -104,13 +102,13 @@ public class BusFragment extends Fragment {
             }
         });
 
-
+        //Add oonClick for the button
         validateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (fragmentListener != null) {
                     if (!tvDate.getText().equals("")&& !tvHour.getText().equals("")) {
-                        if (chooseDate.after(calendar)) {
+                        if (chooseDate.after(calendar) || chooseDate.equals(calendar)) {
                             fragmentListener.validateOnClicked(idBus, sens,chooseDate);
                         }
                         else {
@@ -191,6 +189,11 @@ public class BusFragment extends Fragment {
         return ret;
     }
 
+    /**
+     *
+     * @param i index in the list
+     * @return the list of the two directions for a bus
+     */
     private ArrayList<String> getSensBus (int i) {
         ArrayList<String> ret = new ArrayList<>();
 

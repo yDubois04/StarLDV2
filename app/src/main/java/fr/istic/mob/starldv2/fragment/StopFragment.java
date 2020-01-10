@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import fr.istic.mob.starldv2.adapter.StopAdapter;
 import fr.istic.mob.starldv2.R;
