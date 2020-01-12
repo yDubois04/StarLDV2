@@ -13,10 +13,16 @@ import fr.istic.mob.starldv2.model.StopTime;
 public class StopTimesAdapter extends CursorAdapter {
 
     Cursor cursor;
+    String stringHour;
+    int hour, minute;
 
-    public StopTimesAdapter(Context context, Cursor cursor) {
+    public StopTimesAdapter(Context context, Cursor cursor, String stringHour) {
         super(context, cursor, 0);
         this.cursor = cursor;
+        this.stringHour = stringHour;
+
+        this.hour = Integer.parseInt(this.stringHour.substring(0,2));
+        this.minute = Integer.parseInt(this.stringHour.substring(3,5));
     }
 
     @Override
@@ -52,12 +58,16 @@ public class StopTimesAdapter extends CursorAdapter {
         TextView tvSchedule = (TextView) view;
         String arrivalTime = cursor.getString(cursor.getColumnIndexOrThrow("arrival_time"));
         int hourOfArrival = Integer.parseInt(arrivalTime.substring(0,2));
+        int minuteOfArrival = Integer.parseInt(arrivalTime.substring(3,5));
         if(hourOfArrival > 23) {
             hourOfArrival = hourOfArrival % 24;
         }
-
-        arrivalTime = hourOfArrival + arrivalTime.substring(2);
-        String schedule = arrivalTime;
-        tvSchedule.setText(schedule);
+        if(hourOfArrival > hour || (hourOfArrival == hour && minuteOfArrival > minute)){
+            arrivalTime = hourOfArrival + arrivalTime.substring(2);
+            String schedule = arrivalTime;
+            tvSchedule.setText(schedule);
+        }else{
+            tvSchedule.setText("Le bus est déjà passé à cette horaire ci!");
+        }
     }
 }

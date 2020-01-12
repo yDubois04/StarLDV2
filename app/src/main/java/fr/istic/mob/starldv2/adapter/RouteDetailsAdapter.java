@@ -30,6 +30,12 @@ public class RouteDetailsAdapter extends CursorAdapter {
         String stopName = cursor.getString(1);
         String schedule = cursor.getString(2);
 
+        int hourOfArrival = Integer.parseInt(schedule.substring(0,2));
+        if(hourOfArrival > 23) {
+            hourOfArrival = hourOfArrival % 24;
+        }
+        schedule = hourOfArrival + schedule.substring(2);
+
         tv2.setTextColor(Color.RED);
         tv1.setTextColor(Color.BLACK);
 

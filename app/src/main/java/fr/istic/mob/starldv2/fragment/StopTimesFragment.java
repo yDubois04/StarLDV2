@@ -46,7 +46,9 @@ public class StopTimesFragment extends Fragment {
         Cursor cursor = getContext().getContentResolver().
                 query(Uri.parse("content://fr.istic.starproviderLD/stoptime"), null,null, args, null);
 
-        final StopTimesAdapter adapter = new StopTimesAdapter(getContext(), cursor);
+
+
+        final StopTimesAdapter adapter = new StopTimesAdapter(getContext(), cursor, getArguments().getString("hour"));
         list.setAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
