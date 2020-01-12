@@ -10,6 +10,6 @@ Notre application permet de :
 - En cliquant sur un horaire, on accède aux horaires de passages pour les arrêts suivants
 - Chercher un arrêt et savoir quelles lignes de bus passent par cet arrêt. Pour sortir de la recherche, il faut cliquer sur la flèche de retour.
 
-Pour les bus qui ne sont pas de nuit, soit pour les bus autres que le N1 et le N2, on obtient les horaires du jour pour une heure choisie supérieure ou égale à 3 heures du matin.
+Pour les bus qui ne sont pas de nuit, soit pour les bus autres que le N1 et le N2, on obtient les horaires du jour pour une heure choisie supérieure ou égale à 3 heures du matin. Cela est du au fait qu'un bus de jour peut passer jusqu' 3 heures du matin.
 
 Pour fonctionner cette application nécessite l'installation de l'application StarLD (V1 de l'application)
