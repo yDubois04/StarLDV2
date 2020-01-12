@@ -41,14 +41,13 @@ public class StopTimesFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         list = view.findViewById(R.id.stopTimesList);
 
-        String [] args = {Long.toString(getArguments().getLong("id")),Long.toString(getArguments().getLong("idBus")),Long.toString(getArguments().getLong("sens")), getArguments().getString("day"), getArguments().getString("hour")};
+        String [] args = {Long.toString(getArguments().getLong("id")),Long.toString(getArguments().getLong("idBus")),
+                Long.toString(getArguments().getLong("sens")), getArguments().getString("day"), getArguments().getString("hour")};
 
         Cursor cursor = getContext().getContentResolver().
                 query(Uri.parse("content://fr.istic.starproviderLD/stoptime"), null,null, args, null);
 
-
-
-        final StopTimesAdapter adapter = new StopTimesAdapter(getContext(), cursor, getArguments().getString("hour"));
+        final StopTimesAdapter adapter = new StopTimesAdapter(getContext(), cursor);
         list.setAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -67,6 +66,16 @@ public class StopTimesFragment extends Fragment {
         bundle.putLong("idBus", idBusRoute);
         bundle.putLong("sens", sensTrip);
         bundle.putString("day", day);
+        int heure = Integer.parseInt(hour.substring(0,2));
+        String minutes = hour.substring(3,5);
+        if (heure >= 0 && heure < 3) {
+            heure = 24 + heure;
+            hour = heure +":"+minutes;
+        }
+        else if (heure > 3 && heure < 9 && (idBusRoute == 121 || idBusRoute == 122)) {
+            heure = 24 + heure;
+            hour = heure +":"+minutes;
+        }
         bundle.putString("hour", hour);
         stopTimesFragment.setArguments(bundle);
         return stopTimesFragment;

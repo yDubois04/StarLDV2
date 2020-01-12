@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
     }
 
 
+    //BusFragment Listener
     @Override
     public void validateOnClicked(long id, int sens, Calendar chooseDate) {
         this.busRouteId = id;
@@ -59,13 +60,28 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
         replaceFragment(stopFragment);
     }
 
+    //StopTimesFragmment Listener
     @Override
     public void validateOnClicked(int id, String schedule) {
         routeDetailsFragment = RouteDetailsFragment.newInstance(schedule,id);
         replaceFragment(routeDetailsFragment);
     }
 
+    //Fragment Listener
+    @Override
+    public void validateOnClicked(long idStop) {
+        String day = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH);
+        String hour = getHours(calendar);
 
+        stopTimesFragment = StopTimesFragment.newInstance(idStop, this.busRouteId, this.sensBus, day, hour);
+        replaceFragment(stopTimesFragment);
+    }
+
+
+    /**
+     * Replace actual fragment in the frame by the fragment in parameter
+     * @param fragment
+     */
     private void replaceFragment (Fragment fragment) {
         fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -130,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
                 fragmentManager.popBackStack();
             }
             else {
+                //If the stack is empty, recreate the first frame
                BusFragment busFragment = BusFragment.newInstance();
                fragmentTransaction = fragmentManager.beginTransaction();
                fragmentTransaction.add(R.id.frame,busFragment);
@@ -141,15 +158,11 @@ public class MainActivity extends AppCompatActivity implements BusFragment.BusFr
         }
     }
 
-    @Override
-    public void validateOnClicked(long idStop) {
-        String day = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.ENGLISH);
-        String hour = getHours(calendar);
-
-        stopTimesFragment = StopTimesFragment.newInstance(idStop, this.busRouteId, this.sensBus, day, hour);
-        replaceFragment(stopTimesFragment);
-    }
-
+    /**
+     *
+     * @param calendar
+     * @return a string from calendar
+     */
     private String getHours (Calendar calendar) {
         int intH = calendar.get(Calendar.HOUR_OF_DAY);
         String h;

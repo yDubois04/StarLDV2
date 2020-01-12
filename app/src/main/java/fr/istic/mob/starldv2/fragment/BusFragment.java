@@ -176,6 +176,11 @@ public class BusFragment extends Fragment {
         });
     }
 
+    /**
+     * Add 0 of an hour or minutes if it less than 10
+     * @param i
+     * @return
+     */
     private String getStringForInt (int i) {
         String ret;
 

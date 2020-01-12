@@ -13,16 +13,10 @@ import fr.istic.mob.starldv2.model.StopTime;
 public class StopTimesAdapter extends CursorAdapter {
 
     Cursor cursor;
-    String stringHour;
-    int hour, minute;
 
-    public StopTimesAdapter(Context context, Cursor cursor, String stringHour) {
+    public StopTimesAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
         this.cursor = cursor;
-        this.stringHour = stringHour;
-
-        this.hour = Integer.parseInt(this.stringHour.substring(0,2));
-        this.minute = Integer.parseInt(this.stringHour.substring(3,5));
     }
 
     @Override
@@ -59,15 +53,27 @@ public class StopTimesAdapter extends CursorAdapter {
         String arrivalTime = cursor.getString(cursor.getColumnIndexOrThrow("arrival_time"));
         int hourOfArrival = Integer.parseInt(arrivalTime.substring(0,2));
         int minuteOfArrival = Integer.parseInt(arrivalTime.substring(3,5));
+        tvSchedule.setText(arrivalTime);
         if(hourOfArrival > 23) {
             hourOfArrival = hourOfArrival % 24;
         }
-        if(hourOfArrival > hour || (hourOfArrival == hour && minuteOfArrival > minute)){
-            arrivalTime = hourOfArrival + arrivalTime.substring(2);
-            String schedule = arrivalTime;
-            tvSchedule.setText(schedule);
-        }else{
-            tvSchedule.setText("Le bus est déjà passé à cette horaire ci!");
-        }
+        arrivalTime = getStringOfHour(hourOfArrival) + ":"+getStringOfHour(minuteOfArrival)+":00";
+        tvSchedule.setText(arrivalTime);
     }
+
+    /**
+     * Add 0 of an hour or minutes if it less than 10
+     * @param hour
+     * @return
+     */
+    private String getStringOfHour (int hour) {
+        String h;
+        if(hour < 10){
+            h = "0" + hour;
+        }else{
+            h = Integer.toString(hour);
+        }
+        return h;
+    }
+
 }
