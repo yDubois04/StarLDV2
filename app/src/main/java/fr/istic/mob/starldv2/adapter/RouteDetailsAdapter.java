@@ -34,7 +34,7 @@ public class RouteDetailsAdapter extends CursorAdapter {
         if(hourOfArrival > 23) {
             hourOfArrival = hourOfArrival % 24;
         }
-        schedule = "0"+hourOfArrival + schedule.substring(2);
+        schedule = hourOfArrival + schedule.substring(2);
 
         tv2.setTextColor(Color.RED);
         tv1.setTextColor(Color.BLACK);
